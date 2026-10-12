@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen de Arquitectura - Sistema PHP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #090d16;
+            --surface: #111726;
+            --surface-hover: #172033;
+            --border: #1e293b;
+            --border-highlight: #334155;
+            --primary: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.15);
+            --accent-green: #34d399;
+            --accent-purple: #a78bfa;
+            --accent-amber: #fbbf24;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --text-sub: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2.5rem 1.5rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 70%), var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        header {
+            margin-bottom: 2.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--primary);
+            background: var(--primary-glow);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 1rem;
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--primary);
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 2rem 0 1.25rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title svg {
+            color: var(--primary);
+        }
+
+        /* Flow list / Timeline */
+        .flow-grid {
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .flow-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.1rem 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .flow-card:hover {
+            border-color: var(--border-highlight);
+            background: var(--surface-hover);
+            transform: translateY(-2px);
+        }
+
+        .flow-num {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            background: var(--primary-glow);
+            color: var(--primary);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .flow-content h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .flow-content p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .code-pill {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.06);
+            color: #38bdf8;
+            padding: 0.1rem 0.45rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+
+        /* Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .module-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.15rem;
+            transition: all 0.2s ease;
+        }
+
+        .module-card:hover {
+            border-color: var(--border-highlight);
+            transform: translateY(-2px);
+        }
+
+        .module-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .module-card:nth-child(1) .module-icon { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+        .module-card:nth-child(2) .module-icon { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+        .module-card:nth-child(3) .module-icon { background: rgba(167, 139, 250, 0.15); color: #a78bfa; }
+        .module-card:nth-child(4) .module-icon { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+
+        .module-card h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+            color: var(--text-main);
+        }
+
+        .module-card p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        footer {
+            margin-top: 2.2rem;
+            text-align: center;
+            font-size: 0.78rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="badge">
+                <span class="badge-dot"></span>
+                Arquitectura MVC en PHP
+            </div>
+            <h1>¿Cómo funciona el código?</h1>
+            <p class="subtitle">Resumen mínimo del flujo de ejecución y los componentes clave del sistema.</p>
+        </header>
+
+        <!-- Flujo -->
+        <h2 class="section-title">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            Flujo de Ejecución (Paso a Paso)
+        </h2>
+
+        <div class="flow-grid">
+            <div class="flow-card">
+                <div class="flow-num">1</div>
+                <div class="flow-content">
+                    <h3>Punto de Entrada <span class="code-pill">public/index.php</span></h3>
+                    <p>Atrapa cada petición mediante el parámetro <span class="code-pill">?action=...</span> y centraliza el enrutamiento.</p>
+                </div>
+            </div>
+
+            <div class="flow-card">
+                <div class="flow-num">2</div>
+                <div class="flow-content">
+                    <h3>Seguridad y Permisos</h3>
+                    <p>Verifica si existe sesión activa y valida si el rol del usuario (<span class="code-pill">ADMIN</span>, <span class="code-pill">SOCIO</span>, etc.) tiene permiso para esa acción.</p>
+                </div>
+            </div>
+
+            <div class="flow-card">
+                <div class="flow-num">3</div>
+                <div class="flow-content">
+                    <h3>Controlador <span class="code-pill">src/Controllers/</span></h3>
+                    <p>El router delega la petición al controlador correspondiente para ejecutar la lógica del negocio.</p>
+                </div>
+            </div>
+
+            <div class="flow-card">
+                <div class="flow-num">4</div>
+                <div class="flow-content">
+                    <h3>Modelo <span class="code-pill">src/Models/</span></h3>
+                    <p>El controlador invoca modelos para consultar o actualizar la base de datos MySQL mediante PDO.</p>
+                </div>
+            </div>
+
+            <div class="flow-card">
+                <div class="flow-num">5</div>
+                <div class="flow-content">
+                    <h3>Respuesta <span class="code-pill">src/Views/</span></h3>
+                    <p>Muestra la vista en HTML/PHP renderizada o retorna datos en formato <span class="code-pill">JSON</span> si es una llamada AJAX.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulos -->
+        <h2 class="section-title">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+            Módulos Principales
+        </h2>
+
+        <div class="modules-grid">
+            <div class="module-card">
+                <div class="module-icon">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                </div>
+                <h4>Socios y Empresas</h4>
+                <p>Gestión de afiliados, cónyuges, puestos de trabajo y relaciones.</p>
+            </div>
+
+            <div class="module-card">
+                <div class="module-icon">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 004 11a7.96 7.96 0 001.258 4.316"/>
+                    </svg>
+                </div>
+                <h4>Biometría</h4>
+                <p>Captura, verificación de huellas y control de asistencia con lector USB.</p>
+            </div>
+
+            <div class="module-card">
+                <div class="module-icon">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h4>Votaciones</h4>
+                <p>Registro de postulados, emisión de votos remotos/presenciales y reportes.</p>
+            </div>
+
+            <div class="module-card">
+                <div class="module-icon">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </div>
+                <h4>Permisos y Roles</h4>
+                <p>Matriz de acceso granular por perfil de usuario y auditoría.</p>
+            </div>
+        </div>
+
+        <footer>
+            Sistema PHP &bull; Guataparo Country Club
+        </footer>
+    </div>
+</body>
+</html>

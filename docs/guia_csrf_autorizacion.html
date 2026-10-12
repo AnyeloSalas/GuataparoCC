@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explicación para Principiantes: CSRF y Autorización</title>
+    <!-- Fuentes Google Modernas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-body: #0a0e17;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --bg-card-hover: rgba(24, 33, 53, 0.85);
+            --border-card: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(99, 102, 241, 0.35);
+            
+            --primary: #6366f1;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dark: #1e293b;
+            
+            --radius-xl: 20px;
+            --radius-lg: 14px;
+            --radius-md: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2.5rem 1.25rem;
+            position: relative;
+            overflow-x: hidden;
+            line-height: 1.65;
+        }
+
+        /* Luces ambientales de fondo */
+        .ambient-glow {
+            position: fixed;
+            width: 550px;
+            height: 550px;
+            border-radius: 50%;
+            filter: blur(140px);
+            z-index: -1;
+            opacity: 0.13;
+            pointer-events: none;
+        }
+        .glow-1 { top: -80px; left: 15%; background: var(--primary); }
+        .glow-2 { bottom: 10%; right: 10%; background: var(--accent-cyan); }
+
+        .container {
+            max-width: 1060px;
+            margin: 0 auto;
+        }
+
+        /* Encabezado */
+        header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+        .pill-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1.1rem;
+            border-radius: 9999px;
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid var(--border-glow);
+            color: #a5b4fc;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* Tarjeta Principal de Conceptos */
+        .concept-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-xl);
+            padding: 2.25rem;
+            margin-bottom: 2.25rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .concept-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+        }
+
+        .concept-header {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .icon-box {
+            width: 54px;
+            height: 54px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+        .icon-csrf { background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); }
+        .icon-auth { background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.3); }
+        .icon-priv { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+        .concept-title h2 {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .concept-title span {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Historia / Metáfora */
+        .story-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.5rem;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        .story-box.cyan { border-left-color: var(--accent-cyan); }
+        .story-box.green { border-left-color: var(--accent-emerald); }
+
+        .story-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #818cf8;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .story-title.cyan { color: #38bdf8; }
+        .story-title.green { color: #34d399; }
+
+        .story-text {
+            color: #cbd5e1;
+            font-size: 0.98rem;
+        }
+
+        /* Flujo paso a paso */
+        .step-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 1.25rem;
+        }
+        .step-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-md);
+            padding: 1.1rem;
+            position: relative;
+        }
+        .step-num {
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            line-height: 26px;
+            text-align: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.6rem;
+        }
+        .step-head {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 0.35rem;
+        }
+        .step-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Bloque de código con explicación */
+        .code-snippet {
+            background: #060911;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            margin-top: 1.25rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+        }
+        .c-kw { color: #c084fc; font-weight: 600; }
+        .c-fn { color: #38bdf8; }
+        .c-str { color: #4ade80; }
+        .c-var { color: #fb923c; }
+        .c-comment { color: #64748b; font-style: italic; }
+
+        /* Cuadro resumen rápido */
+        .summary-banner {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+        .summary-banner h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.6rem;
+        }
+        .summary-banner p {
+            color: #cbd5e1;
+            max-width: 650px;
+            margin: 0 auto 1.25rem auto;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.9rem; }
+            .concept-header { flex-direction: column; align-items: flex-start; }
+            .concept-card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <div class="container">
+        <!-- Encabezado -->
+        <header>
+            <div class="pill-badge">
+                <i class="fas fa-graduation-cap"></i> Explicación para Principiantes
+            </div>
+            <h1>Seguridad Web Explicada Fácil</h1>
+            <p class="subtitle">
+                ¿Qué significan <strong>CSRF</strong>, <strong>Validación de Sesión</strong> y <strong>Escalamiento de Privilegios</strong> en tu sistema? Entiéndelo con analogías de la vida real.
+            </p>
+        </header>
+
+        <!-- CONCEPTO 1: CSRF -->
+        <div class="concept-card">
+            <div class="concept-header">
+                <div class="icon-box icon-csrf">
+                    <i class="fas fa-fingerprint"></i>
+                </div>
+                <div class="concept-title">
+                    <h2>1. ¿Qué es CSRF y las Peticiones Falsificadas?</h2>
+                    <span>Cross-Site Request Forgery (Falsificación de Petición en Sitios Cruzados)</span>
+                </div>
+            </div>
+
+            <div class="story-box">
+                <div class="story-title">
+                    <i class="fas fa-lightbulb"></i> La Metáfora de la Vida Real: "El Cheque en Blanco"
+                </div>
+                <p class="story-text">
+                    Imagina que vas al banco y te identificas en ventanilla con tu documento. Mientras estás ahí hablando, alguien te entrega un papel que dice <em>"Firma aquí para donar $1"</em>, pero por debajo el papel dice <em>"Transfiere todos tus ahorros a mi cuenta"</em>. Como el banco ya sabe quién eres tú, ¡la orden se ejecutaría con tu nombre si no existiera una confirmación secreta!
+                </p>
+            </div>
+
+            <p style="color: #cbd5e1; margin-bottom: 1rem; font-size: 0.95rem;">
+                <strong>¿Cómo ocurre en la computadora?</strong> Si tienes abierta tu sesión de Administrador en una pestaña y en otra pestaña abres un enlace malicioso, esa página externa puede intentar enviar órdenes a tu sistema haciéndose pasar por ti.
+            </p>
+
+            <div class="step-flow">
+                <div class="step-card">
+                    <span class="step-num">1</span>
+                    <div class="step-head">Abres el Formulario</div>
+                    <div class="step-desc">
+                        El servidor genera un código secreto único (token) y lo esconde dentro de tu formulario con <code>Csrf::tokenField()</code>.
+                    </div>
+                </div>
+                <div class="step-card">
+                    <span class="step-num">2</span>
+                    <div class="step-head">Envías los Cambios</div>
+                    <div class="step-desc">
+                        Al hacer clic en "Guardar Permisos", tu navegador envía ese código secreto junto con los datos.
+                    </div>
+                </div>
+                <div class="step-card">
+                    <span class="step-num">3</span>
+                    <div class="step-head">Verificación Estricta</div>
+                    <div class="step-desc">
+                        El controlador ejecuta <code>CsrfMiddleware::verify()</code>. Si una web externa intentó atacar, no tiene el token y el sistema la frena de inmediato.
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-snippet">
+                <span class="c-comment">// 1. En la vista (HTML): Inserta el sello secreto invisible</span><br>
+                &lt;form action=<span class="c-str">"index.php?action=permisos_update"</span> method=<span class="c-str">"POST"</span>&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;?php echo <span class="c-fn">Csrf::tokenField</span>(); ?&gt;<br>
+                <br>
+                <span class="c-comment">// 2. En el controlador (PHP): Exige el sello antes de hacer nada</span><br>
+                <span class="c-kw">try</span> {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-fn">CsrfMiddleware::verify</span>();<br>
+                } <span class="c-kw">catch</span> (Exception <span class="c-var">$e</span>) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-fn">flash</span>(<span class="c-str">'error'</span>, <span class="c-str">'Token de seguridad inválido.'</span>);<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-fn">exit</span>();<br>
+                }
+            </div>
+        </div>
+
+        <!-- CONCEPTO 2: AUTORIZACIÓN Y SESIÓN -->
+        <div class="concept-card">
+            <div class="concept-header">
+                <div class="icon-box icon-auth">
+                    <i class="fas fa-id-badge"></i>
+                </div>
+                <div class="concept-title">
+                    <h2>2. Validación Estricta de Sesión</h2>
+                    <span>Control de Acceso basado en Roles</span>
+                </div>
+            </div>
+
+            <div class="story-box cyan">
+                <div class="story-title cyan">
+                    <i class="fas fa-lightbulb"></i> La Metáfora de la Vida Real: "El Guardia en la Puerta VIP"
+                </div>
+                <p class="story-text">
+                    No basta con que no pongas el cartel de "Zona VIP" a la vista de todos. Si alguien descubre la puerta trasera o el pasillo, un guardia de seguridad debe estar parado en la puerta exigiendo el brazalete VIP para dejar pasar.
+                </p>
+            </div>
+
+            <p style="color: #cbd5e1; margin-bottom: 0.5rem; font-size: 0.95rem;">
+                Un usuario con rol normal (por ejemplo, un operador o recepcionista) podría intentar escribir manualmente en la barra de direcciones de su navegador:
+                <br>
+                <code style="color: #38bdf8; font-size: 0.88rem;">http://localhost/php_system/index.php?action=permisos</code>
+            </p>
+
+            <div class="code-snippet">
+                <span class="c-comment">// PermisoController.php - Línea 16: El guardia revisa el brazalete</span><br>
+                <span class="c-kw">if</span> (<span class="c-fn">strtolower</span>(<span class="c-var">$_SESSION</span>[<span class="c-str">'tipousuario'</span>]) !== <span class="c-str">'administrador'</span>) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-fn">flash</span>(<span class="c-str">'error'</span>, <span class="c-str">'No tiene permisos para acceder a este módulo.'</span>);<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-fn">header</span>(<span class="c-str">"Location: dashboard.php"</span>);<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-kw">exit</span>(); <span class="c-comment">// Expulsado inmediatamente</span><br>
+                }
+            </div>
+        </div>
+
+        <!-- CONCEPTO 3: ESCALAMIENTO DE PRIVILEGIOS -->
+        <div class="concept-card">
+            <div class="concept-header">
+                <div class="icon-box icon-priv">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <div class="concept-title">
+                    <h2>3. Escalamiento de Privilegios & Roles Reservados</h2>
+                    <span>Impedir modificar 'administrador' y 'socio'</span>
+                </div>
+            </div>
+
+            <div class="story-box green">
+                <div class="story-title green">
+                    <i class="fas fa-lightbulb"></i> ¿Qué es "Escalar Privilegios"?
+                </div>
+                <p class="story-text">
+                    Es cuando un usuario corriente busca la manera de "subir de nivel" sin autorización, por ejemplo, intentar otorgarse a sí mismo poderes de Administrador, o sabotear el sistema quitándole los poderes al verdadero Administrador.
+                </p>
+            </div>
+
+            <div class="step-flow">
+                <div class="step-card">
+                    <div class="step-head"><i class="fas fa-shield-virus text-warning mr-1" style="color:#f59e0b;"></i> El Truco del "Inspeccionar Elemento"</div>
+                    <div class="step-desc">
+                        Alguien con conocimientos básicos puede abrir las herramientas de desarrollador (F12) y alterar el campo oculto del formulario para poner <code>name="tipousuario" value="administrador"</code> y desmarcar todas las casillas.
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-head"><i class="fas fa-shield-alt text-success mr-1" style="color:#10b981;"></i> La Protección en el Servidor</div>
+                    <div class="step-desc">
+                        Tu código en PHP no confía en lo que mande el navegador. Revisa explícitamente que nadie pueda alterar al <code>'administrador'</code> ni al <code>'socio'</code>.
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-snippet">
+                <span class="c-comment">// PermisoController.php - Línea 40: Bloqueo explícito de roles vitales</span><br>
+                <span class="c-kw">if</span> (!<span class="c-fn">empty</span>(<span class="c-var">$tipousuario</span>) &amp;&amp; <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-fn">strtolower</span>(<span class="c-var">$tipousuario</span>) !== <span class="c-str">'administrador'</span> &amp;&amp; <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-fn">strtolower</span>(<span class="c-var">$tipousuario</span>) !== <span class="c-str">'socio'</span>) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-comment">// Solo permite modificar roles normales (asistente, cajero, etc.)</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-var">$this</span>-&gt;permisoModel-&gt;<span class="c-fn">updatePermisos</span>(<span class="c-var">$tipousuario</span>, <span class="c-var">$modulos_seleccionados</span>);<br>
+                } <span class="c-kw">else</span> {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-fn">flash</span>(<span class="c-str">'warning'</span>, <span class="c-str">'No se puede modificar este tipo de usuario.'</span>);<br>
+                }
+            </div>
+        </div>
+
+        <!-- Resumen Rápido -->
+        <div class="summary-banner">
+            <h3><i class="fas fa-check-circle" style="color: #34d399; margin-right: 0.5rem;"></i> Tu Sistema está Blindado</h3>
+            <p>
+                Gracias a estas tres capas, nadie puede engañarte desde otra web (CSRF), nadie puede entrar sin ser Administrador (Sesión) y nadie puede romper el rol principal ni auto-ascenderse (Escalamiento de Privilegios).
+            </p>
+        </div>
+
+        <footer>
+            Guía Educativa Interactiva &bull; Módulo de Permisos de <strong>php_system</strong>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,333 @@
+2025-12-03 16:37:55 - Datos recibidos: cedula=14.381.885, type=socio, template_length=892
+2025-12-03 16:37:55 - Tabla seleccionada: personas
+2025-12-03 16:37:55 - Usuario encontrado en personas
+2025-12-03 16:37:55 - UPDATE ejecutado, filas afectadas: 1
+2025-12-03 16:37:55 - Huella guardada exitosamente
+2025-12-03 16:39:12 - Datos recibidos: cedula=V- 2624551533, type=usuario, template_length=892
+2025-12-03 16:39:12 - Tabla seleccionada: usuarios
+2025-12-03 16:39:12 - Usuario encontrado en usuarios
+2025-12-03 16:39:12 - UPDATE ejecutado, filas afectadas: 1
+2025-12-03 16:39:12 - Huella guardada exitosamente
+2025-12-03 17:33:26 - Datos recibidos: cedula=14.381.885, type=socio, template_length=892
+2025-12-03 17:33:26 - Tabla seleccionada: personas
+2025-12-03 17:33:26 - Usuario encontrado en personas
+2025-12-03 17:33:26 - UPDATE ejecutado, filas afectadas: 1
+2025-12-03 17:33:26 - Huella guardada exitosamente
+2025-12-03 17:46:21 - Datos recibidos: cedula=V- 2624551533, type=usuario, template_length=892
+2025-12-03 17:46:21 - Tabla seleccionada: usuarios
+2025-12-03 17:46:21 - Usuario encontrado en usuarios
+2025-12-03 17:46:21 - UPDATE ejecutado, filas afectadas: 1
+2025-12-03 17:46:22 - Huella guardada exitosamente
+2025-12-03 17:47:56 - Datos recibidos: cedula=V- 2624551533, type=usuario, template_length=892
+2025-12-03 17:47:56 - Tabla seleccionada: usuarios
+2025-12-03 17:47:56 - Usuario encontrado en usuarios
+2025-12-03 17:47:56 - UPDATE ejecutado, filas afectadas: 1
+2025-12-03 17:47:56 - Huella guardada exitosamente
+2025-12-04 11:54:28 - Datos recibidos: cedula=V-2589659, type=socio, template_length=892
+2025-12-04 11:54:28 - Tabla seleccionada: personas
+2025-12-04 11:54:28 - Usuario encontrado en personas
+2025-12-04 11:54:28 - UPDATE ejecutado, filas afectadas: 1
+2025-12-04 11:54:28 - Huella guardada exitosamente
+2025-12-04 15:04:49 - Datos recibidos: cedula=7.149.013, type=socio, template_length=892
+2025-12-04 15:04:49 - Tabla seleccionada: personas
+2025-12-04 15:04:49 - Usuario encontrado en personas
+2025-12-04 15:04:49 - UPDATE ejecutado, filas afectadas: 1
+2025-12-04 15:04:49 - Huella guardada exitosamente
+2026-02-02 14:45:22 - Datos recibidos: cedula=V- 2624551533, type=usuario, template_length=47
+2026-02-02 14:45:22 - Tabla seleccionada: usuarios
+2026-02-02 14:45:22 - Usuario encontrado en usuarios
+2026-02-02 14:45:22 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 14:45:22 - Huella guardada exitosamente
+2026-02-02 14:45:38 - Datos recibidos: cedula=V- 2624551533, type=usuario, template_length=47
+2026-02-02 14:45:38 - Tabla seleccionada: usuarios
+2026-02-02 14:45:38 - Usuario encontrado en usuarios
+2026-02-02 14:45:38 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 14:45:38 - Huella guardada exitosamente
+2026-02-02 14:46:44 - Datos recibidos: cedula=14624983, type=usuario, template_length=47
+2026-02-02 14:46:44 - Tabla seleccionada: usuarios
+2026-02-02 14:46:44 - Usuario encontrado en usuarios
+2026-02-02 14:46:44 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 14:46:44 - Huella guardada exitosamente
+2026-02-02 15:00:50 - Datos recibidos: cedula=14.381.885, type=socio, template_length=47
+2026-02-02 15:00:50 - Tabla seleccionada: personas
+2026-02-02 15:00:50 - Usuario encontrado en personas
+2026-02-02 15:00:50 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 15:00:50 - Huella guardada exitosamente
+2026-02-02 16:03:05 - Datos recibidos: cedula=7.149.013, type=socio, template_length=47
+2026-02-02 16:03:05 - Tabla seleccionada: personas
+2026-02-02 16:03:05 - Usuario encontrado en personas
+2026-02-02 16:03:05 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 16:03:05 - Huella guardada exitosamente
+2026-02-02 16:03:17 - Datos recibidos: cedula=4.768.054, type=socio, template_length=47
+2026-02-02 16:03:17 - Tabla seleccionada: personas
+2026-02-02 16:03:17 - Usuario encontrado en personas
+2026-02-02 16:03:17 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 16:03:17 - Huella guardada exitosamente
+2026-02-02 16:12:19 - Datos recibidos: cedula=V-14024551, type=usuario, template_length=47
+2026-02-02 16:12:19 - Tabla seleccionada: usuarios
+2026-02-02 16:12:19 - Usuario encontrado en usuarios
+2026-02-02 16:12:19 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 16:12:19 - Huella guardada exitosamente
+2026-02-02 18:19:14 - Datos recibidos: cedula=V- 2624551533, type=usuario, template_length=17
+2026-02-02 18:19:14 - Tabla seleccionada: usuarios
+2026-02-02 18:19:14 - Usuario encontrado en usuarios
+2026-02-02 18:19:14 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 18:19:14 - Huella guardada exitosamente
+2026-02-02 18:19:29 - Datos recibidos: cedula=V- 32213432, type=usuario, template_length=17
+2026-02-02 18:19:29 - Tabla seleccionada: usuarios
+2026-02-02 18:19:29 - Usuario encontrado en usuarios
+2026-02-02 18:19:29 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 18:19:29 - Huella guardada exitosamente
+2026-02-02 18:21:45 - Datos recibidos: cedula=V- 12345671, type=usuario, template_length=17
+2026-02-02 18:21:45 - Tabla seleccionada: usuarios
+2026-02-02 18:21:45 - Usuario encontrado en usuarios
+2026-02-02 18:21:46 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 18:21:46 - Huella guardada exitosamente
+2026-02-02 18:22:57 - Datos recibidos: cedula=V- 2624551533, type=usuario, template_length=17
+2026-02-02 18:22:57 - Tabla seleccionada: usuarios
+2026-02-02 18:22:57 - Usuario encontrado en usuarios
+2026-02-02 18:22:57 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 18:22:57 - Huella guardada exitosamente
+2026-02-02 18:25:08 - Datos recibidos: cedula=7.149.013, type=socio, template_length=17
+2026-02-02 18:25:08 - Tabla seleccionada: personas
+2026-02-02 18:25:08 - Usuario encontrado en personas
+2026-02-02 18:25:08 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 18:25:08 - Huella guardada exitosamente
+2026-02-02 18:25:29 - Datos recibidos: cedula=7.149.013, type=socio, template_length=17
+2026-02-02 18:25:29 - Tabla seleccionada: personas
+2026-02-02 18:25:29 - Usuario encontrado en personas
+2026-02-02 18:25:29 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 18:25:29 - Huella guardada exitosamente
+2026-02-02 18:32:51 - Datos recibidos: cedula=4.768.054, type=socio, template_length=17
+2026-02-02 18:32:51 - Tabla seleccionada: personas
+2026-02-02 18:32:51 - Usuario encontrado en personas
+2026-02-02 18:32:51 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 18:32:51 - Huella guardada exitosamente
+2026-02-02 18:36:17 - Datos recibidos: cedula=V- 24345786, type=usuario, template_length=17
+2026-02-02 18:36:17 - ERROR: Template muy corto (17 bytes). RECHAZADO.
+2026-02-02 18:36:36 - Datos recibidos: cedula=V- 24345786, type=usuario, template_length=17
+2026-02-02 18:36:36 - ERROR: Template muy corto (17 bytes). RECHAZADO.
+2026-02-02 18:36:39 - Datos recibidos: cedula=V- 24345786, type=usuario, template_length=17
+2026-02-02 18:36:39 - ERROR: Template muy corto (17 bytes). RECHAZADO.
+2026-02-02 18:36:45 - Datos recibidos: cedula=V- 24345786, type=usuario, template_length=17
+2026-02-02 18:36:45 - ERROR: Template muy corto (17 bytes). RECHAZADO.
+2026-02-02 18:54:47 - Datos recibidos: cedula=V- 12345671, type=usuario, template_length=684
+2026-02-02 18:54:47 - Tabla seleccionada: usuarios
+2026-02-02 18:54:47 - Usuario encontrado en usuarios
+2026-02-02 18:54:47 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 18:54:47 - Huella guardada exitosamente
+2026-02-02 18:56:46 - Datos recibidos: cedula=14624983, type=usuario, template_length=684
+2026-02-02 18:56:46 - Tabla seleccionada: usuarios
+2026-02-02 18:56:46 - Usuario encontrado en usuarios
+2026-02-02 18:56:46 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 18:56:46 - Huella guardada exitosamente
+2026-02-02 19:03:45 - Datos recibidos: cedula=V- 32213432, type=usuario, template_length=684
+2026-02-02 19:03:45 - Tabla seleccionada: usuarios
+2026-02-02 19:03:45 - Usuario encontrado en usuarios
+2026-02-02 19:03:45 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 19:03:45 - Huella guardada exitosamente
+2026-02-02 19:15:29 - Datos recibidos: cedula=V- 32213432, type=usuario, template_length=684
+2026-02-02 19:15:29 - Tabla seleccionada: usuarios
+2026-02-02 19:15:29 - Usuario encontrado en usuarios
+2026-02-02 19:15:29 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 19:15:29 - Huella guardada exitosamente
+2026-02-02 19:20:29 - Datos recibidos: cedula=14624983, type=usuario, template_length=684
+2026-02-02 19:20:29 - Tabla seleccionada: usuarios
+2026-02-02 19:20:29 - Usuario encontrado en usuarios
+2026-02-02 19:20:29 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 19:20:29 - Huella guardada exitosamente
+2026-02-02 19:23:20 - Datos recibidos: cedula=V- 2624551533, type=usuario, template_length=684
+2026-02-02 19:23:20 - Tabla seleccionada: usuarios
+2026-02-02 19:23:20 - Usuario encontrado en usuarios
+2026-02-02 19:23:20 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 19:23:20 - Huella guardada exitosamente
+2026-02-02 19:47:47 - Datos recibidos: cedula=V- 12345671, type=usuario, template_length=684
+2026-02-02 19:47:47 - Tabla seleccionada: usuarios
+2026-02-02 19:47:47 - Usuario encontrado en usuarios
+2026-02-02 19:47:47 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 19:47:47 - Huella guardada exitosamente
+2026-02-02 19:51:53 - Datos recibidos: cedula=V-14024551, type=usuario, template_length=684
+2026-02-02 19:51:53 - Tabla seleccionada: usuarios
+2026-02-02 19:51:53 - Usuario encontrado en usuarios
+2026-02-02 19:51:53 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 19:51:53 - Huella guardada exitosamente
+2026-02-02 19:53:58 - Datos recibidos: cedula=V-14024551, type=usuario, template_length=684
+2026-02-02 19:53:58 - Tabla seleccionada: usuarios
+2026-02-02 19:53:58 - Usuario encontrado en usuarios
+2026-02-02 19:53:58 - UPDATE ejecutado, filas afectadas: 1
+2026-02-02 19:53:58 - Huella guardada exitosamente
+2026-02-03 14:43:37 - Datos recibidos: cedula=V- 32213432, type=usuario, template_length=684
+2026-02-03 14:43:37 - Tabla seleccionada: usuarios
+2026-02-03 14:43:37 - Usuario encontrado en usuarios
+2026-02-03 14:43:37 - UPDATE ejecutado, filas afectadas: 1
+2026-02-03 14:43:37 - Huella guardada exitosamente
+2026-02-03 14:44:51 - Datos recibidos: cedula=14624983, type=usuario, template_length=684
+2026-02-03 14:44:51 - Tabla seleccionada: usuarios
+2026-02-03 14:44:51 - Usuario encontrado en usuarios
+2026-02-03 14:44:51 - UPDATE ejecutado, filas afectadas: 1
+2026-02-03 14:44:51 - Huella guardada exitosamente
+2026-02-03 14:46:14 - Datos recibidos: cedula=7.149.013, type=socio, template_length=684
+2026-02-03 14:46:14 - Tabla seleccionada: personas
+2026-02-03 14:46:14 - Usuario encontrado en personas
+2026-02-03 14:46:14 - UPDATE ejecutado, filas afectadas: 1
+2026-02-03 14:46:14 - Huella guardada exitosamente
+2026-02-03 19:39:36 - Datos recibidos: cedula=7.040.118, type=socio, template_length=684
+2026-02-03 19:39:36 - Tabla seleccionada: personas
+2026-02-03 19:39:36 - Usuario encontrado en personas
+2026-02-03 19:39:36 - UPDATE ejecutado, filas afectadas: 1
+2026-02-03 19:39:36 - Huella guardada exitosamente
+2026-02-07 16:01:11 - Datos recibidos: cedula=13.235.816, type=socio, template_length=684
+2026-02-07 16:01:11 - Tabla seleccionada: personas
+2026-02-07 16:01:11 - Usuario encontrado en personas
+2026-02-07 16:01:11 - UPDATE ejecutado, filas afectadas: 1
+2026-02-07 16:01:11 - Huella guardada exitosamente
+2026-02-07 17:46:11 - Datos recibidos: cedula=2.741.187, type=socio, template_length=684
+2026-02-07 17:46:11 - Tabla seleccionada: personas
+2026-02-07 17:46:11 - Usuario encontrado en personas
+2026-02-07 17:46:11 - UPDATE ejecutado, filas afectadas: 1
+2026-02-07 17:46:11 - Huella guardada exitosamente
+2026-02-08 01:16:52 - Datos recibidos: cedula=7.040.118, type=socio, template_length=684
+2026-02-08 01:16:52 - Tabla seleccionada: personas
+2026-02-08 01:16:52 - Usuario encontrado en personas
+2026-02-08 01:16:52 - UPDATE ejecutado, filas afectadas: 1
+2026-02-08 01:16:52 - Huella guardada exitosamente
+2026-02-08 01:17:10 - Datos recibidos: cedula=13.235.816, type=socio, template_length=684
+2026-02-08 01:17:10 - Tabla seleccionada: personas
+2026-02-08 01:17:10 - Usuario encontrado en personas
+2026-02-08 01:17:10 - UPDATE ejecutado, filas afectadas: 1
+2026-02-08 01:17:10 - Huella guardada exitosamente
+2026-02-09 21:18:18 - Datos recibidos: cedula=12.108.867, type=socio, template_length=684
+2026-02-09 21:18:18 - Tabla seleccionada: personas
+2026-02-09 21:18:18 - Usuario encontrado en personas
+2026-02-09 21:18:18 - UPDATE ejecutado, filas afectadas: 1
+2026-02-09 21:18:18 - Huella guardada exitosamente
+2026-02-09 21:25:02 - Datos recibidos: cedula=7.132.409, type=socio, template_length=684
+2026-02-09 21:25:02 - Tabla seleccionada: personas
+2026-02-09 21:25:02 - Usuario encontrado en personas
+2026-02-09 21:25:02 - UPDATE ejecutado, filas afectadas: 1
+2026-02-09 21:25:02 - Huella guardada exitosamente
+2026-03-10 22:34:38 - Datos recibidos: cedula=V-7148253, type=socio, template_length=684
+2026-03-10 22:34:38 - Tabla seleccionada: personas
+2026-03-10 22:34:38 - Usuario encontrado en personas
+2026-03-10 22:34:38 - UPDATE ejecutado, filas afectadas: 1
+2026-03-10 22:34:38 - Huella guardada exitosamente
+2026-03-10 22:34:55 - Datos recibidos: cedula=V-7040118, type=socio, template_length=684
+2026-03-10 22:34:55 - Tabla seleccionada: personas
+2026-03-10 22:34:55 - Usuario encontrado en personas
+2026-03-10 22:34:55 - UPDATE ejecutado, filas afectadas: 1
+2026-03-10 22:34:55 - Huella guardada exitosamente
+2026-03-10 22:35:06 - Datos recibidos: cedula=V-13235816, type=socio, template_length=684
+2026-03-10 22:35:06 - Tabla seleccionada: personas
+2026-03-10 22:35:06 - Usuario encontrado en personas
+2026-03-10 22:35:06 - UPDATE ejecutado, filas afectadas: 1
+2026-03-10 22:35:06 - Huella guardada exitosamente
+2026-03-10 22:35:18 - Datos recibidos: cedula=V-12108867, type=socio, template_length=684
+2026-03-10 22:35:18 - Tabla seleccionada: personas
+2026-03-10 22:35:18 - Usuario encontrado en personas
+2026-03-10 22:35:18 - UPDATE ejecutado, filas afectadas: 1
+2026-03-10 22:35:18 - Huella guardada exitosamente
+2026-03-10 22:35:32 - Datos recibidos: cedula=V-7132409, type=socio, template_length=684
+2026-03-10 22:35:32 - Tabla seleccionada: personas
+2026-03-10 22:35:32 - Usuario encontrado en personas
+2026-03-10 22:35:32 - UPDATE ejecutado, filas afectadas: 1
+2026-03-10 22:35:32 - Huella guardada exitosamente
+2026-03-10 22:35:47 - Datos recibidos: cedula=V-2781495, type=socio, template_length=684
+2026-03-10 22:35:47 - Tabla seleccionada: personas
+2026-03-10 22:35:47 - Usuario encontrado en personas
+2026-03-10 22:35:47 - UPDATE ejecutado, filas afectadas: 1
+2026-03-10 22:35:47 - Huella guardada exitosamente
+2026-03-15 15:54:37 - Datos recibidos: cedula=7148253, type=socio, template_length=684
+2026-03-15 15:54:37 - Tabla seleccionada: personas
+2026-03-15 15:54:37 - Usuario encontrado en personas
+2026-03-15 15:54:37 - UPDATE ejecutado, filas afectadas: 1
+2026-03-15 15:54:37 - Huella guardada exitosamente
+2026-03-15 16:19:56 - Datos recibidos: cedula=7040118, type=socio, template_length=684
+2026-03-15 16:19:56 - Tabla seleccionada: personas
+2026-03-15 16:19:56 - Usuario encontrado en personas
+2026-03-15 16:19:56 - UPDATE ejecutado, filas afectadas: 1
+2026-03-15 16:19:56 - Huella guardada exitosamente
+2026-04-14 13:28:35 - Datos recibidos: cedula=13235816, type=socio, template_length=684
+2026-04-14 13:28:35 - Tabla seleccionada: personas
+2026-04-14 13:28:35 - Usuario encontrado en personas
+2026-04-14 13:28:35 - UPDATE ejecutado, filas afectadas: 1
+2026-04-14 13:28:35 - Huella guardada exitosamente
+2026-05-17 23:20:53 - Datos recibidos: cedula=13235816, type=socio, template_length=684
+2026-05-17 23:20:53 - Tabla seleccionada: personas
+2026-05-17 23:20:53 - Usuario encontrado en personas
+2026-05-17 23:20:53 - UPDATE ejecutado, filas afectadas: 1
+2026-05-17 23:20:53 - Huella guardada exitosamente
+2026-05-17 23:23:11 - Datos recibidos: cedula=7148253, type=socio, template_length=684
+2026-05-17 23:23:11 - Tabla seleccionada: personas
+2026-05-17 23:23:11 - Usuario encontrado en personas
+2026-05-17 23:23:11 - UPDATE ejecutado, filas afectadas: 1
+2026-05-17 23:23:11 - Huella guardada exitosamente
+2026-05-17 23:23:32 - Datos recibidos: cedula=7040118, type=socio, template_length=684
+2026-05-17 23:23:32 - Tabla seleccionada: personas
+2026-05-17 23:23:32 - Usuario encontrado en personas
+2026-05-17 23:23:32 - UPDATE ejecutado, filas afectadas: 1
+2026-05-17 23:23:32 - Huella guardada exitosamente
+2026-05-17 23:28:08 - Datos recibidos: cedula=7040118, type=socio, template_length=684
+2026-05-17 23:28:08 - Tabla seleccionada: personas
+2026-05-17 23:28:08 - Usuario encontrado en personas
+2026-05-17 23:28:08 - UPDATE ejecutado, filas afectadas: 1
+2026-05-17 23:28:08 - Huella guardada exitosamente
+2026-05-17 23:29:36 - Datos recibidos: cedula=7040118, type=socio, template_length=684
+2026-05-17 23:29:36 - Tabla seleccionada: personas
+2026-05-17 23:29:36 - Usuario encontrado en personas
+2026-05-17 23:29:36 - UPDATE ejecutado, filas afectadas: 1
+2026-05-17 23:29:36 - Huella guardada exitosamente
+2026-05-17 23:34:06 - Datos recibidos: cedula=7040118, type=socio, template_length=684
+2026-05-17 23:34:06 - Tabla seleccionada: personas
+2026-05-17 23:34:06 - Usuario encontrado en personas
+2026-05-17 23:34:06 - UPDATE ejecutado, filas afectadas: 1
+2026-05-17 23:34:06 - Huella guardada exitosamente
+2026-05-17 23:38:05 - Datos recibidos: cedula=7148253, type=socio, template_length=684
+2026-05-17 23:38:05 - Tabla seleccionada: personas
+2026-05-17 23:38:05 - Usuario encontrado en personas
+2026-05-17 23:38:05 - UPDATE ejecutado, filas afectadas: 1
+2026-05-17 23:38:05 - Huella guardada exitosamente
+2026-05-17 23:38:49 - Datos recibidos: cedula=7148253, type=socio, template_length=684
+2026-05-17 23:38:49 - Tabla seleccionada: personas
+2026-05-17 23:38:49 - Usuario encontrado en personas
+2026-05-17 23:38:49 - UPDATE ejecutado, filas afectadas: 1
+2026-05-17 23:38:49 - Huella guardada exitosamente
+2026-05-21 13:30:00 - Datos recibidos: cedula=12108867, type=socio, template_length=684
+2026-05-21 13:30:00 - Tabla seleccionada: personas
+2026-05-21 13:30:00 - Usuario encontrado en personas
+2026-05-21 13:30:00 - UPDATE ejecutado, filas afectadas: 1
+2026-05-21 13:30:00 - Huella guardada exitosamente
+2026-05-21 13:32:52 - Datos recibidos: cedula=7040118, type=socio, template_length=684
+2026-05-21 13:32:52 - Tabla seleccionada: personas
+2026-05-21 13:32:52 - Usuario encontrado en personas
+2026-05-21 13:32:52 - UPDATE ejecutado, filas afectadas: 1
+2026-05-21 13:32:52 - Huella guardada exitosamente
+2026-05-21 14:03:43 - Datos recibidos: cedula=13235816, type=socio, template_length=684
+2026-05-21 14:03:43 - Tabla seleccionada: personas
+2026-05-21 14:03:43 - Usuario encontrado en personas
+2026-05-21 14:03:43 - UPDATE ejecutado, filas afectadas: 1
+2026-05-21 14:03:43 - Huella guardada exitosamente
+2026-05-23 18:02:58 - Datos recibidos: cedula=12108867, type=socio, template_length=684
+2026-05-23 18:02:58 - Tabla seleccionada: personas
+2026-05-23 18:02:58 - Usuario encontrado en personas
+2026-05-23 18:02:58 - UPDATE ejecutado, filas afectadas: 1
+2026-05-23 18:02:58 - Huella guardada exitosamente
+2026-06-11 10:54:57 - Datos recibidos: cedula=7040118, type=socio, template_length=684
+2026-06-11 10:54:57 - Tabla seleccionada: personas
+2026-06-11 10:54:57 - Usuario encontrado en personas
+2026-06-11 10:54:57 - UPDATE ejecutado, filas afectadas: 1
+2026-06-11 10:54:57 - Huella guardada exitosamente
+2026-07-11 12:10:32 - Datos recibidos: cedula=13235816, type=socio, template_length=684
+2026-07-11 12:10:32 - Tabla seleccionada: personas
+2026-07-11 12:10:32 - Usuario encontrado en personas
+2026-07-11 12:10:32 - UPDATE ejecutado, filas afectadas: 1
+2026-07-11 12:10:32 - Huella guardada exitosamente
+2026-10-03 15:39:14 - Datos recibidos: cedula=12108867, type=socio, template_length=684
+2026-10-03 15:39:14 - Tabla seleccionada: personas
+2026-10-03 15:39:14 - Usuario encontrado en personas
+2026-10-03 15:39:14 - UPDATE ejecutado, filas afectadas: 1
+2026-10-03 15:39:14 - Huella guardada exitosamente
+2026-10-03 20:16:28 - Datos recibidos: cedula=2781495, type=socio, template_length=684
+2026-10-03 20:16:28 - Tabla seleccionada: personas
+2026-10-03 20:16:28 - Usuario encontrado en personas
+2026-10-03 20:16:28 - UPDATE ejecutado, filas afectadas: 1
+2026-10-03 20:16:28 - Huella guardada exitosamente

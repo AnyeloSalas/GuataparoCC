@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defensa de Trabajo de Grado - Arquitectura y Funcionamiento del Sistema</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --surface: #111827;
+            --surface-card: #162032;
+            --surface-hover: #1c283f;
+            --border: #1f2d42;
+            --border-accent: #2d3f5d;
+            --primary: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.12);
+            --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.12);
+            --amber: #f59e0b;
+            --amber-glow: rgba(245, 158, 11, 0.12);
+            --purple: #a855f7;
+            --purple-glow: rgba(168, 85, 247, 0.12);
+            --rose: #f43f5e;
+            --text-main: #f8fafc;
+            --text-sub: #cbd5e1;
+            --text-muted: #94a3b8;
+            --code-bg: #0d1321;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.65;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 290px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            padding: 1.8rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 50;
+        }
+
+        .sidebar-brand {
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-tag {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: var(--primary-glow);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 0.2rem 0.55rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .sidebar-brand h2 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.02em;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            flex-grow: 1;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 0.65rem 0.85rem;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            color: #fff;
+            background: var(--surface-hover);
+            border: 1px solid var(--border);
+        }
+
+        .sidebar-nav a span.num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Main Content Container */
+        .main-wrapper {
+            margin-left: 290px;
+            flex-grow: 1;
+            padding: 3rem 4rem;
+            max-width: 1200px;
+        }
+
+        header.hero {
+            margin-bottom: 3.5rem;
+            background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.08) 0%, transparent 60%);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.8rem;
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero-pill-dot {
+            width: 7px;
+            height: 7px;
+            background: #34d399;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #34d399;
+        }
+
+        h1.hero-title {
+            font-size: 2.35rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.hero-desc {
+            color: var(--text-sub);
+            font-size: 1.05rem;
+            max-width: 820px;
+        }
+
+        /* Section Headings */
+        section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 2rem;
+        }
+
+        .sec-header {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            margin-bottom: 1.75rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sec-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: var(--primary-glow);
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        h2.sec-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.02em;
+        }
+
+        /* Technical Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.35rem;
+        }
+
+        .card {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.6rem;
+            transition: all 0.25s ease;
+        }
+
+        .card:hover {
+            border-color: var(--border-accent);
+            background: var(--surface-hover);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-bottom: 1rem;
+        }
+
+        .file-ref {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.55rem;
+            border-radius: 6px;
+            color: var(--primary);
+        }
+
+        /* Flow / Lifecycle Visualizer */
+        .pipeline-box {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 2rem;
+        }
+
+        .pipeline-step {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.75rem;
+            position: relative;
+        }
+
+        .pipeline-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 45px;
+            bottom: -25px;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .pipeline-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--primary-glow);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            z-index: 2;
+        }
+
+        .pipeline-details h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.35rem;
+        }
+
+        .pipeline-details p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Table Design */
+        .table-responsive {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--surface-card);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: rgba(17, 24, 39, 0.9);
+            color: var(--text-sub);
+            font-weight: 600;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-sub);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: var(--surface-hover);
+        }
+
+        .tag-vuln {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.76rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            background: rgba(244, 63, 94, 0.12);
+            color: #fb7185;
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            display: inline-block;
+        }
+
+        /* Accordion QA Jurado */
+        .qa-item {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            margin-bottom: 1.1rem;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .qa-item:hover {
+            border-color: var(--border-accent);
+        }
+
+        .qa-question {
+            padding: 1.25rem 1.5rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .qa-question .arrow {
+            color: var(--primary);
+            transition: transform 0.25s ease;
+        }
+
+        .qa-answer {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            border-top: 1px solid transparent;
+            display: block;
+        }
+
+        .qa-quote {
+            margin-top: 0.75rem;
+            background: rgba(13, 19, 33, 0.7);
+            border-left: 3px solid var(--primary);
+            padding: 0.9rem 1.1rem;
+            border-radius: 0 10px 10px 0;
+            font-style: italic;
+            color: #e2e8f0;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; position: static; border-right: none; border-bottom: 1px solid var(--border); }
+            .main-wrapper { margin-left: 0; padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <span class="sidebar-tag">Tesis / Grado</span>
+            <h2>Guía de Defensa</h2>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">Sistema Integral Guataparo Country Club</p>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li><a href="#ficha"><span class="num">01</span> Ficha & Propósito</a></li>
+            <li><a href="#arquitectura"><span class="num">02</span> Arquitectura MVC</a></li>
+            <li><a href="#ciclo"><span class="num">03</span> Ciclo de Ejecución</a></li>
+            <li><a href="#votaciones"><span class="num">04</span> Sufragio & Voto Remoto</a></li>
+            <li><a href="#biometria"><span class="num">05</span> Biometría & Hardware</a></li>
+            <li><a href="#ia"><span class="num">06</span> Asistente de IA</a></li>
+            <li><a href="#seguridad"><span class="num">07</span> Ciberseguridad (OWASP)</a></li>
+            <li><a href="#jurado"><span class="num">08</span> Preguntas del Jurado</a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+            PHP 8.x Puro &bull; PDO &bull; MySQL &bull; Hardware Bridge
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-wrapper">
+
+        <!-- Hero Header -->
+        <header class="hero">
+            <div class="hero-pill">
+                <span class="hero-pill-dot"></span>
+                Documento de Defensa de Grado
+            </div>
+            <h1 class="hero-title">Arquitectura, Funcionamiento Técnico y Seguridad del Sistema</h1>
+            <p class="hero-desc">
+                Análisis en profundidad de los fundamentos de ingeniería de software, patrones de diseño, comunicación de hardware a bajo nivel, transaccionalidad bancaria en elecciones y mitigación de vulnerabilidades informáticas.
+            </p>
+        </header>
+
+        <!-- 01. Ficha Técnica -->
+        <section id="ficha">
+            <div class="sec-header">
+                <span class="sec-badge">01</span>
+                <h2 class="sec-title">Ficha Técnica & Planteamiento del Problema</h2>
+            </div>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--primary-glow); color: var(--primary);">🎯</div>
+                        <span class="file-ref">Propósito</span>
+                    </div>
+                    <h3>El Reto Institucional</h3>
+                    <p>
+                        Garantizar la gestión unificada de afiliados, eliminar el fraude o suplantación en asambleas mediante biometría de huella en vivo, y permitir la participación democrática con voto remoto cifrado y trazable.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--emerald-glow); color: var(--emerald);">⚙️</div>
+                        <span class="file-ref">Stack</span>
+                    </div>
+                    <h3>Especificaciones Técnicas</h3>
+                    <p>
+                        <strong>Backend:</strong> PHP 8.1 nativo (sin frameworks monolíticos).<br>
+                        <strong>Base de Datos:</strong> MySQL / MariaDB mediante transacciones PDO.<br>
+                        <strong>Biometría:</strong> SDK Nativo C++ / Python Bridge (FPModule).<br>
+                        <strong>Seguridad:</strong> Tokens efímeros, RBAC dinámico y CSRF.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 02. Arquitectura MVC -->
+        <section id="arquitectura">
+            <div class="sec-header">
+                <span class="sec-badge">02</span>
+                <h2 class="sec-title">Patrón Arquitectónico & Diseño de Software</h2>
+            </div>
+            <p style="color: var(--text-sub); margin-bottom: 1.5rem;">
+                El sistema prescinde de cajas negras y adopta una implementación rigurosa de patrones de diseño de nivel empresarial:
+            </p>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--primary-glow); color: var(--primary);">🗄️</div>
+                        <span class="file-ref">src/Models/</span>
+                    </div>
+                    <h3>Modelos (Active Record / DAO)</h3>
+                    <p>
+                        Encapsulan las reglas de negocio y consultas con <code>PDO::prepare()</code>. Clases como <code>Votacion</code>, <code>Socio</code>, <code>Huella</code> y <code>Permiso</code> administran su persistencia e integridad relacional.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--purple-glow); color: var(--purple);">⚡</div>
+                        <span class="file-ref">src/Controllers/</span>
+                    </div>
+                    <h3>Controladores (Orquestadores)</h3>
+                    <p>
+                        Interceptan las peticiones, verifican tokens CSRF y autorizaciones, solicitan transacciones a los modelos y despachan la salida (HTML renderizado o JSON para llamadas AJAX).
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--amber-glow); color: var(--amber);">🛡️</div>
+                        <span class="file-ref">public/index.php</span>
+                    </div>
+                    <h3>Front Controller & Middleware</h3>
+                    <p>
+                        Punto de entrada universal. Ningún archivo interno puede ser consultado de forma aislada. Controla la sesión, verifica la lista blanca de rutas públicas y ejecuta el RBAC antes de invocar cualquier controlador.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 03. Ciclo de Ejecución -->
+        <section id="ciclo">
+            <div class="sec-header">
+                <span class="sec-badge">03</span>
+                <h2 class="sec-title">Ciclo de Vida de una Petición (Request Lifecycle)</h2>
+            </div>
+
+            <div class="pipeline-box">
+                <div class="pipeline-step">
+                    <div class="pipeline-circle">1</div>
+                    <div class="pipeline-details">
+                        <h4>Front Controller (<span class="file-ref">public/index.php</span>)</h4>
+                        <p>Recibe la solicitud HTTP con el parámetro <code>?action=nombre_accion</code>. Carga el archivo <code>src/bootstrap.php</code> que inicializa variables de entorno (.env), configuración de sesiones seguras y autoloader PSR-4 compatible.</p>
+                    </div>
+                </div>
+
+                <div class="pipeline-step">
+                    <div class="pipeline-circle">2</div>
+                    <div class="pipeline-details">
+                        <h4>Capa de Seguridad, Sesión & RBAC Dinámico</h4>
+                        <p>Evalúa si la acción es pública. Si es privada, exige sesión activa. Si el usuario es de tipo <strong>SOCIO</strong>, restringe las acciones a su catálogo permitido. Si es otro rol, consulta en tiempo real con <code>Permiso::hasAccess()</code> contra la base de datos.</p>
+                    </div>
+                </div>
+
+                <div class="pipeline-step">
+                    <div class="pipeline-circle">3</div>
+                    <div class="pipeline-details">
+                        <h4>Ejecución en Controlador & Middleware de Mutación</h4>
+                        <p>Si la petición es de tipo <code>POST</code>, se evalúa obligatoriamente <code>CsrfMiddleware::verify()</code> para evitar ataques de falsificación de peticiones. El controlador coordina la lógica requerida.</p>
+                    </div>
+                </div>
+
+                <div class="pipeline-step">
+                    <div class="pipeline-circle">4</div>
+                    <div class="pipeline-details">
+                        <h4>Persistencia en Base de Datos (PDO Prepared)</h4>
+                        <p>El modelo ejecuta operaciones SQL estrictamente parametrizadas con transacciones ACID (<code>beginTransaction</code>, <code>commit</code>, <code>rollBack</code>) para garantizar atomicidad.</p>
+                    </div>
+                </div>
+
+                <div class="pipeline-step">
+                    <div class="pipeline-circle">5</div>
+                    <div class="pipeline-details">
+                        <h4>Renderizado de Vista o Respuesta JSON</h4>
+                        <p>Para peticiones web estándar, inyecta las variables en plantillas situadas en <code>src/Views/</code>. Para peticiones AJAX (como verificación de huella o IA), devuelve payloads JSON tipados.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04. Votaciones -->
+        <section id="votaciones">
+            <div class="sec-header">
+                <span class="sec-badge">04</span>
+                <h2 class="sec-title">Módulo de Sufragio & Voto Remoto Criptográfico</h2>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--primary-glow); color: var(--primary);">🗳️</div>
+                        <span class="file-ref">Voto Presencial</span>
+                    </div>
+                    <h3>Transaccionalidad ACID</h3>
+                    <p>
+                        Al registrar la boleta, se inicia una transacción en MySQL. Cada voto individual por postulado se vincula al sufragio global. Si falla un solo registro, se revierte todo con <code>rollBack()</code> para evitar votos huérfanos.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--emerald-glow); color: var(--emerald);">🌐</div>
+                        <span class="file-ref">Voto Remoto</span>
+                    </div>
+                    <h3>Tokens Efímeros de Un Solo Uso</h3>
+                    <p>
+                        Se genera un token criptográfico no predecible asociado a la acción con TTL (tiempo de vida limitado). El enlace se despacha por correo mediante <strong>PHPMailer (SMTP TLS)</strong>. Al emitir el voto, el token se autodestruye inmediatamente en la BD.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--amber-glow); color: var(--amber);">📊</div>
+                        <span class="file-ref">Escrutinio Paramétrico</span>
+                    </div>
+                    <h3>Quórum y Reglas de Aceptación</h3>
+                    <p>
+                        El sistema valida que la cantidad de votantes únicos alcance el <code>votacion_minimo_votantes</code> y que los candidatos superen el <code>votacion_porcentaje_aceptacion</code> configurado antes de emitir actas oficiales de proclamación.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05. Biometría -->
+        <section id="biometria">
+            <div class="sec-header">
+                <span class="sec-badge">05</span>
+                <h2 class="sec-title">Arquitectura de Integración Hardware-Web (Biometría)</h2>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--purple-glow); color: var(--purple);">🔌</div>
+                        <span class="file-ref">Hardware Bridge</span>
+                    </div>
+                    <h3>Patrón de Puente Local</h3>
+                    <p>
+                        Debido al sandbox del navegador que prohíbe el acceso directo a puertos USB, se implementó un <strong>Daemon/Microservicio Local</strong> en puerto 8888 (manejado por <code>PuenteController</code> y scripts de SDK) que dialoga con los drivers del lector.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--primary-glow); color: var(--primary);">🖐️</div>
+                        <span class="file-ref">Templates</span>
+                    </div>
+                    <h3>Validación de Huella & Redundancia</h3>
+                    <p>
+                        El sistema rechaza templates corruptos menores a 100 bytes (para evitar falsos positivos por suciedad o ruido) y exige obligatoriamente enrolar dos huellas distintas (ej. índice derecho e izquierdo) con verificación de no coincidencia idéntica.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 06. IA -->
+        <section id="ia">
+            <div class="sec-header">
+                <span class="sec-badge">06</span>
+                <h2 class="sec-title">Asistente Inteligente & Procesamiento de Lenguaje Natural</h2>
+            </div>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--emerald-glow); color: var(--emerald);">🤖</div>
+                        <span class="file-ref">src/Controllers/IAController.php</span>
+                    </div>
+                    <h3>Motor de Inferencia Híbrido</h3>
+                    <p>
+                        1. <strong>Base de Conocimiento Entrenable:</strong> Permite al administrador cargar intenciones institucionales por palabras clave.<br>
+                        2. <strong>Extracción de Entidades por Regex:</strong> Procesa consultas en lenguaje natural (ej. <em>"buscar socio Juan Pérez"</em>), extrayendo patrones y consultando la base de datos en tiempo real.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 07. Seguridad OWASP -->
+        <section id="seguridad">
+            <div class="sec-header">
+                <span class="sec-badge">07</span>
+                <h2 class="sec-title">Ciberseguridad y Mitigación de Vulnerabilidades (OWASP Top 10)</h2>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vulnerabilidad (OWASP)</th>
+                            <th>Riesgo Potencial</th>
+                            <th>Mecanismo de Defensa en el Código</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="tag-vuln">SQL Injection (SQLi)</span></td>
+                            <td>Robo o alteración de base de datos.</td>
+                            <td><strong>100% de consultas preparadas:</strong> Abstracción total mediante PDO y vinculación de parámetros con <code>bindValue/bindParam</code> en todos los modelos.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag-vuln">Cross-Site Request Forgery</span></td>
+                            <td>Acciones involuntarias ejecutadas por un usuario autenticado.</td>
+                            <td><strong>CsrfMiddleware:</strong> Generación y validación de tokens criptográficos aleatorios por sesión exigidos en cada petición <code>POST</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag-vuln">Insecure Direct Object Reference</span></td>
+                            <td>Un socio vota a nombre de otra acción alterando el formulario.</td>
+                            <td><strong>Control de Pertenencia IDOR:</strong> En <code>VotacionController::votar()</code> se comprueba que la acción enviada pertenezca a la lista de acciones activas vinculadas a su cédula.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag-vuln">Session Hijacking</span></td>
+                            <td>Robo de cookies de sesión mediante XSS de red.</td>
+                            <td><strong>Cookies Endurecidas:</strong> En <code>bootstrap.php</code> se configuran flags <code>httponly = true</code>, <code>SameSite = Lax</code>, <code>secure</code> en HTTPS y expiración estricta por <code>SESSION_LIFETIME</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag-vuln">Broken Access Control</span></td>
+                            <td>Escalamiento vertical u horizontal de privilegios por URL.</td>
+                            <td><strong>RBAC Dinámico:</strong> Matriz relacional administrable en <code>permisos_tipousuario</code> interceptada en el Front Controller.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 08. Preguntas del Jurado -->
+        <section id="jurado">
+            <div class="sec-header">
+                <span class="sec-badge">08</span>
+                <h2 class="sec-title">Preguntas Clave del Jurado Evaluador & Argumentación</h2>
+            </div>
+
+            <div class="qa-item">
+                <div class="qa-question">
+                    ¿Por qué desarrollaron el sistema en PHP nativo en lugar de utilizar un framework como Laravel?
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="qa-answer">
+                    Esta decisión responde a tres justificaciones fundamentales de ingeniería:
+                    <div class="qa-quote">
+                        "1. <strong>Rendimiento & Baja Latencia:</strong> La comunicación con el daemon biométrico USB local y el procesamiento de sufragios en tiempo real requieren una sobrecarga mínima de CPU y memoria.<br>
+                        2. <strong>Reducción de Superficie de Ataque:</strong> Se elimina la dependencia de cientos de paquetes externos de terceros sujetos a vulnerabilidades en la cadena de suministro.<br>
+                        3. <strong>Demostración de Competencias de Grado:</strong> Construir el enrutador, el middleware de seguridad, el motor RBAC y la capa de abstracción PDO desde cero demuestra el dominio completo de los protocolos web y de la arquitectura de software."
+                    </div>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <div class="qa-question">
+                    ¿Cómo se garantiza que un socio no vote dos veces y que el voto sea secreto?
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="qa-answer">
+                    Se implementa segregación de responsabilidades:
+                    <div class="qa-quote">
+                        "El sistema comprueba mediante el método <code>yaVoto($accion)</code> si la acción ya emitió su sufragio en el periodo activo. El registro del voto disocia la identidad del elector de la papeleta final consolidada. En el caso del voto remoto, el enlace utiliza un <strong>token criptográfico efímero de un solo uso</strong> que se autodestruye inmediatamente después de confirmar la transacción."
+                    </div>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <div class="qa-question">
+                    ¿Qué sucede si hay una caída de energía o interrupción eléctrica a mitad de una votación?
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="qa-answer">
+                    Se garantiza la consistencia del sistema mediante la propiedad de Atomicidad (ACID):
+                    <div class="qa-quote">
+                        "El guardado de votos se ejecuta bajo un bloque <code>$this->db->beginTransaction()</code>. Si ocurre un corte de energía, falla de red o error de servidor antes de completar todos los postulados, MySQL ejecuta un rollback automático al expirar la conexión. La base de datos queda intacta, no se registran votos parciales y el socio puede votar nuevamente al restablecer el servicio."
+                    </div>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <div class="qa-question">
+                    ¿Cómo puede un navegador web leer una huella dactilar de un lector USB?
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="qa-answer">
+                    Se resolvió implementando el patrón Architectural Hardware Bridge:
+                    <div class="qa-quote">
+                        "Dado que los navegadores web por políticas de seguridad operan en una 'sandbox' y no pueden acceder al bus USB de la máquina, se configuró un daemon de comunicación local en el puerto 8888. La aplicación web realiza una petición asíncrona local por AJAX al daemon; este se comunica con las librerías dinámicas (DLL/SDK) del sensor, extrae las minucias de la huella en un template matemático seguro y lo devuelve al frontend para su contrastación."
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>

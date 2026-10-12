@@ -1,0 +1,29 @@
+# Disable Directory Browsing
+Options -Indexes
+
+# Protect Root Directory and Sensitive Files
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Prevent direct access to hidden files and sensitive extensions
+    RewriteRule ^(\.env|\.git|\.gitignore) - [F,L,NC]
+    RewriteRule \.(sql|bat|log|md|json|lock)$ - [F,L,NC]
+
+    # Prevent direct access to internal application directories
+    RewriteRule ^(src|config|database|backups|DOCUMENTOS|logs|scripts|vendor)(/.*)?$ - [F,L,NC]
+
+    # Redirect root requests to public/
+    RewriteCond %{REQUEST_URI} !^/php_system/public/ [NC]
+    RewriteRule ^$ public/ [L,R=301]
+</IfModule>
+
+# Fallback: Deny direct access to sensitive files
+<FilesMatch "(\.env|\.sql|\.bat|\.gitignore)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

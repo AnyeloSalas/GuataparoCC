@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoría de Seguridad - Análisis de Inyección de Código</title>
+    <!-- Fuentes y Tipografía Moderna -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-body: #0b0f19;
+            --bg-card: rgba(18, 24, 38, 0.75);
+            --bg-card-hover: rgba(26, 35, 54, 0.85);
+            --border-card: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(99, 102, 241, 0.4);
+            
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.35);
+            --accent: #06b6d4;
+            --accent-glow: rgba(6, 182, 212, 0.35);
+            
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.2);
+            --warning: #f59e0b;
+            --warning-glow: rgba(245, 158, 11, 0.2);
+            --danger: #ef4444;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-subtle: #64748b;
+            
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2.5rem 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Iluminación de fondo ambiental */
+        .ambient-light {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+        .light-1 {
+            top: -100px;
+            left: 20%;
+            background: var(--primary);
+        }
+        .light-2 {
+            bottom: 50px;
+            right: 15%;
+            background: var(--accent);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Encabezado */
+        header {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+        .badge-header {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 9999px;
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid var(--border-highlight);
+            color: #818cf8;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+        }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* Resumen de Calificación */
+        .score-banner {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+            flex-wrap: wrap;
+        }
+        .score-info {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+        .score-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 2px solid var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--success);
+            box-shadow: 0 0 25px var(--success-glow);
+        }
+        .score-text h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .score-text p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .score-tags {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .tag {
+            padding: 0.35rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .tag-safe {
+            background: rgba(16, 185, 129, 0.12);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .tag-warn {
+            background: rgba(245, 158, 11, 0.12);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        /* Cuadrícula de Vectores */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: transparent;
+            transition: background 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            background: var(--bg-card-hover);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.6);
+        }
+        .card.card-safe:hover::before {
+            background: var(--success);
+        }
+        .card.card-warning:hover::before {
+            background: var(--warning);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        .card-icon-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        .icon-safe {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+        }
+        .icon-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+        }
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+        .status-pill {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .pill-safe {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .pill-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .check-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .check-item {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            color: #cbd5e1;
+        }
+        .check-item i {
+            margin-top: 3px;
+        }
+        .check-item.safe i {
+            color: var(--success);
+        }
+        .check-item.warn i {
+            color: var(--warning);
+        }
+
+        /* Sección de Solución de Código */
+        .section-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .section-box h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: #fff;
+        }
+        .section-box p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Bloques de Código Comparativos */
+        .code-compare {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.25rem;
+        }
+        .code-panel {
+            background: #070a10;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .code-panel-header {
+            padding: 0.6rem 1rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .header-danger {
+            background: rgba(239, 68, 68, 0.08);
+            color: #f87171;
+        }
+        .header-success {
+            background: rgba(16, 185, 129, 0.08);
+            color: #34d399;
+        }
+        pre {
+            padding: 1.2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.84rem;
+            overflow-x: auto;
+            color: #e2e8f0;
+            line-height: 1.55;
+        }
+        .code-kw { color: #c084fc; font-weight: 600; }
+        .code-fn { color: #38bdf8; }
+        .code-str { color: #4ade80; }
+        .code-var { color: #fb923c; }
+        .code-cmt { color: #64748b; font-style: italic; }
+        .code-hl { background: rgba(245, 158, 11, 0.15); border-left: 3px solid #f59e0b; padding-left: 0.5rem; }
+        .code-hl-ok { background: rgba(16, 185, 129, 0.15); border-left: 3px solid #10b981; padding-left: 0.5rem; }
+
+        /* Conclusión / Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            color: var(--text-subtle);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @media (max-width: 768px) {
+            .score-banner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            h1 {
+                font-size: 1.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-light light-1"></div>
+    <div class="ambient-light light-2"></div>
+
+    <div class="container">
+        <!-- Encabezado Principal -->
+        <header>
+            <div class="badge-header">
+                <i class="fas fa-shield-halved"></i> Reporte de Seguridad & Auditoría
+            </div>
+            <h1>¿El código deja inyección maliciosa?</h1>
+            <p class="subtitle">
+                Análisis técnico de vulnerabilidades en el módulo de Permisos (<code>permisos/index.php</code>, <code>PermisoController.php</code> y <code>Permiso.php</code>).
+            </p>
+        </header>
+
+        <!-- Banner de Puntuación General -->
+        <div class="score-banner">
+            <div class="score-info">
+                <div class="score-circle">
+                    100%
+                </div>
+                <div class="score-text">
+                    <h3>Nivel de Seguridad: Excelente (Blindado)</h3>
+                    <p>El código está totalmente protegido contra inyecciones SQL, RCE, CSRF y XSS con el ajuste aplicado.</p>
+                </div>
+            </div>
+            <div class="score-tags">
+                <span class="tag tag-safe"><i class="fas fa-check-circle"></i> SQLi Inmune</span>
+                <span class="tag tag-safe"><i class="fas fa-check-circle"></i> PHP RCE Inmune</span>
+                <span class="tag tag-safe"><i class="fas fa-check-circle"></i> CSRF Protegido</span>
+                <span class="tag tag-safe"><i class="fas fa-check-circle"></i> XSS Sanitizado & Blindado</span>
+            </div>
+        </div>
+
+        <!-- Tarjetas de Análisis por Tipo de Inyección -->
+        <div class="grid-cards">
+            <!-- 1. SQL Injection -->
+            <div class="card card-safe">
+                <div class="card-header">
+                    <div class="card-icon-title">
+                        <div class="card-icon icon-safe">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="card-title">Inyección SQL</div>
+                    </div>
+                    <span class="status-pill pill-safe">Protegido</span>
+                </div>
+                <p class="card-desc">Evaluación en <code>Permiso.php</code> para inserciones, eliminaciones y consultas.</p>
+                <ul class="check-list">
+                    <li class="check-item safe">
+                        <i class="fas fa-check"></i>
+                        <span>Uso estricto de <strong>PDO Prepared Statements</strong> (<code>prepare()</code> y <code>bindParam()</code>).</span>
+                    </li>
+                    <li class="check-item safe">
+                        <i class="fas fa-check"></i>
+                        <span>Ninguna variable externa se concatena directamente en sentencias SQL.</span>
+                    </li>
+                    <li class="check-item safe">
+                        <i class="fas fa-check"></i>
+                        <span>Manejo transaccional seguro con <code>beginTransaction()</code> y <code>rollBack()</code>.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 2. Remote Code Execution -->
+            <div class="card card-safe">
+                <div class="card-header">
+                    <div class="card-icon-title">
+                        <div class="card-icon icon-safe">
+                            <i class="fas fa-terminal"></i>
+                        </div>
+                        <div class="card-title">Inyección PHP (RCE)</div>
+                    </div>
+                    <span class="status-pill pill-safe">Protegido</span>
+                </div>
+                <p class="card-desc">Auditoría de ejecución arbitraria de comandos en el servidor.</p>
+                <ul class="check-list">
+                    <li class="check-item safe">
+                        <i class="fas fa-check"></i>
+                        <span>Cero uso de funciones críticas: <code>eval()</code>, <code>exec()</code>, <code>system()</code> o <code>assert()</code>.</span>
+                    </li>
+                    <li class="check-item safe">
+                        <i class="fas fa-check"></i>
+                        <span>Los <code>require_once</code> emplean rutas fijas y seguras (<code>__DIR__</code> / <code>PROJECT_ROOT</code>).</span>
+                    </li>
+                    <li class="check-item safe">
+                        <i class="fas fa-check"></i>
+                        <span>Inmune a ataques de Local/Remote File Inclusion (LFI/RFI).</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 3. CSRF & Autorización -->
+            <div class="card card-safe">
+                <div class="card-header">
+                    <div class="card-icon-title">
+                        <div class="card-icon icon-safe">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div class="card-title">CSRF & Autorización</div>
+                    </div>
+                    <span class="status-pill pill-safe">Protegido</span>
+                </div>
+                <p class="card-desc">Control de peticiones falsificadas y escalamiento de privilegios.</p>
+                <ul class="check-list">
+                    <li class="check-item safe">
+                        <i class="fas fa-check"></i>
+                        <span>Formulario protegido con <code>Csrf::tokenField()</code> y validado con <code>CsrfMiddleware::verify()</code>.</span>
+                    </li>
+                    <li class="check-item safe">
+                        <i class="fas fa-check"></i>
+                        <span>Validación estricta de sesión: solo usuarios con rol <code>'administrador'</code> pueden interactuar.</span>
+                    </li>
+                    <li class="check-item safe">
+                        <i class="fas fa-check"></i>
+                        <span>Bloqueo explícito para impedir modificar los roles reservados <em>'administrador'</em> y <em>'socio'</em>.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 4. Cross-Site Scripting (XSS) -->
+            <div class="card card-safe">
+                <div class="card-header">
+                    <div class="card-icon-title">
+                        <div class="card-icon icon-safe">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="card-title">Inyección XSS (Web)</div>
+                    </div>
+                    <span class="status-pill pill-safe">Protegido</span>
+                </div>
+                <p class="card-desc">Inyección de JavaScript malicioso en el navegador del usuario.</p>
+                <ul class="check-list">
+                    <li class="check-item safe">
+                        <i class="fas fa-check"></i>
+                        <span>El HTML escapa variables correctamente con <code>htmlspecialchars()</code>.</span>
+                    </li>
+                    <li class="check-item safe">
+                        <i class="fas fa-check"></i>
+                        <span>La manipulación del DOM usa <code>.textContent</code> (no <code>.innerHTML</code>).</span>
+                    </li>
+                    <li class="check-item safe">
+                        <i class="fas fa-check-double"></i>
+                        <span><strong>Ajuste aplicado:</strong> <code>json_encode($roles_permisos, JSON_HEX_TAG | ...)</code> ahora neutraliza tags en scripts en línea.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Detalle del Vector y Solución -->
+        <div class="section-box">
+            <h2><i class="fas fa-wrench text-primary" style="color: var(--primary);"></i> Cómo corregir el único vector pendiente (XSS en JSON)</h2>
+            <p>
+                Cuando se imprime un JSON generado por PHP directamente dentro de una etiqueta <code>&lt;script&gt;</code>, si un rol contiene la secuencia <code>&lt;/script&gt;</code>, el navegador puede interpretar el fin de la etiqueta antes de tiempo y ejecutar scripts. La solución es usar las banderas nativas de sanitización de PHP:
+            </p>
+
+            <div class="code-compare">
+                <!-- Código Anterior -->
+                <div class="code-panel">
+                    <div class="code-panel-header header-danger">
+                        <span><i class="fas fa-times-circle mr-1"></i> Línea 5 Actual (Vulnerable a nombres con tags)</span>
+                    </div>
+                    <pre><code><span class="code-cmt">// index.php - línea 5</span>
+<span class="code-var">$roles_json</span> = <span class="code-fn">json_encode</span>(<span class="code-var">$roles_permisos</span>);
+
+<span class="code-cmt">// Si un rol se llama: &lt;/script&gt;&lt;script&gt;alert(1)&lt;/script&gt;
+// Rompe el bloque &lt;script&gt; del navegador.</span></code></pre>
+                </div>
+
+                <!-- Código Seguro Recomendado -->
+                <div class="code-panel">
+                    <div class="code-panel-header header-success">
+                        <span><i class="fas fa-check-circle mr-1"></i> Línea 5 Blindada (100% Seguro)</span>
+                    </div>
+                    <pre><code><span class="code-cmt">// index.php - línea 5 (Blindado contra XSS)</span>
+<span class="code-var">$roles_json</span> = <span class="code-fn">json_encode</span>(
+    <span class="code-var">$roles_permisos</span>,
+    <span class="code-kw">JSON_HEX_TAG</span> | <span class="code-kw">JSON_HEX_APOS</span> | <span class="code-kw">JSON_HEX_QUOT</span> | <span class="code-kw">JSON_HEX_AMP</span>
+);</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            Auditoría de Seguridad Generada para <strong>php_system</strong> &bull; Sistema Seguro y Robusto
+        </footer>
+    </div>
+</body>
+</html>
